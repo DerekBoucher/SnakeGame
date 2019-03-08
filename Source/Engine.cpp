@@ -69,24 +69,24 @@ Engine::Engine(const char* x, int width, int height)
 	}
 
 	//Load Background Texture
-	mainSurface = IMG_Load("Assets/background.png");
+	mainSurface = IMG_Load("/Users/Dab908/Desktop/Xcode Projects/snakeGame/Assets/background.png");
 	backgroundTexture = SDL_CreateTextureFromSurface(mainRenderer, mainSurface);
 	SDL_FreeSurface(mainSurface);
 	backgroundRect.h = 40;
 	backgroundRect.w = 40;
 
 	//Load Border
-	mainSurface = IMG_Load("Assets/gameBorder.png");
+	mainSurface = IMG_Load("/Users/Dab908/Desktop/Xcode Projects/snakeGame/Assets/gameBorder.png");
 	border = SDL_CreateTextureFromSurface(mainRenderer, mainSurface);
 	SDL_FreeSurface(mainSurface);
 
 	//Load ScoreBoard
-	mainSurface = IMG_Load("Assets/SCORE.png");
+	mainSurface = IMG_Load("/Users/Dab908/Desktop/Xcode Projects/snakeGame/Assets/SCORE.png");
 	SCORE = SDL_CreateTextureFromSurface(mainRenderer, mainSurface);
 	SDL_FreeSurface(mainSurface);
 
 	//Load num Textures
-	mainSurface = IMG_Load("Assets/pyxel_NUM.png");
+	mainSurface = IMG_Load("/Users/Dab908/Desktop/Xcode Projects/snakeGame/Assets/pyxel_NUM.png");
 	num1 = SDL_CreateTextureFromSurface(mainRenderer, mainSurface);
 	num2 = SDL_CreateTextureFromSurface(mainRenderer, mainSurface);
 	num3 = SDL_CreateTextureFromSurface(mainRenderer, mainSurface);
@@ -104,7 +104,7 @@ Engine::Engine(const char* x, int width, int height)
 	player = new Snake(mainRenderer, mainSurface, width, height);
 
 	//Instantiate the Fruit
-	fruit = new GameObject(mainRenderer, mainSurface, "Assets/fruit.png",w,h);
+	fruit = new GameObject(mainRenderer, mainSurface, "/Users/Dab908/Desktop/Xcode Projects/snakeGame/Assets/fruit.png",w,h);
 
 	//Initialize the map
 
