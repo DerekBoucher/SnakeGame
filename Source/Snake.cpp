@@ -1,7 +1,9 @@
 #include "Snake.h"
 using namespace std;
 
-Snake::Snake(SDL_Renderer* passedRenderer, SDL_Surface* passedSurface, int xCoord, int yCoord)
+SDL_Event shared::event;
+
+Snake::Snake(SDL_Renderer* passedRenderer, SDL_Surface* passedSurface, int xCoord, int yCoord, bool* running)
 {
 	//Format the dimensions of the destination rectangle
 	destRect.h = 40;
@@ -19,6 +21,9 @@ Snake::Snake(SDL_Renderer* passedRenderer, SDL_Surface* passedSurface, int xCoor
 
 	//Instantiate direction to 0 = game hasnt started yet
 	direction = 0;
+    
+    isRunning = running;
+    
 }
 
 bool Snake::snakeRender(SDL_Renderer* passedRenderer,int arr[18][19])
@@ -46,14 +51,13 @@ bool Snake::snakeRender(SDL_Renderer* passedRenderer,int arr[18][19])
 	return true;
 }
 
-int Snake::userInput()
+void Snake::userInput()
 {
-	
-	SDL_PollEvent(&userrInput);
-	switch (userrInput.type)
+    SDL_PollEvent(&shared::event);
+	switch (shared::event.type)
 	{
 	case SDL_KEYDOWN:
-		switch (userrInput.key.keysym.sym)
+		switch (shared::event.key.keysym.sym)
 		{
 		case SDLK_w:
 			if (direction != 3)
@@ -86,10 +90,12 @@ int Snake::userInput()
 			break;
 		}
 		break;
+        case SDL_QUIT:
+            *isRunning = false;
+            break;
 	default:
 		break;
 	}
-	return direction;
 }
 
 Snake::~Snake()

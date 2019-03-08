@@ -6,6 +6,8 @@
 #include "GameObject.h"
 #include <math.h>
 #include <ctime>
+#include <thread>
+#include "Shared.h"
 
 using namespace std;
 
@@ -44,7 +46,7 @@ public:
 	SDL_Renderer* getRenderer();
 	SDL_Surface* getSurface();
 	SDL_Window* getWindow();
-
+    Snake * player;
 
 private:
 
@@ -83,8 +85,8 @@ private:
 	SDL_Texture* num3;
 	SDL_Rect backgroundRect;
 	SDL_Rect numRect;
-	Snake * player;
 	GameObject * fruit;
+    std::thread* _engineTHR;
 
 
 };

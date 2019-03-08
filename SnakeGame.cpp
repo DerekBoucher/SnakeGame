@@ -13,30 +13,14 @@ int main(int argc, char* args[])
 	gameWidth = 1080;
 	gameHeight = 720;
 
-	//FPS limit
-	const int FPS = 8;
-	const int frameDelay = 1000 / FPS;
-	Uint32 framestart;
-	int frametime;
-
 	//Instantiate the game engine
 	game = new Engine("SnakeGame", gameWidth, gameHeight);
 
 	//Game Loop
 	while (game->Running())
 	{
-		framestart = SDL_GetTicks();
-
-		game->Update();
-		game->EventManager();
-		game->Render();
-
-		frametime = SDL_GetTicks() - framestart;
-
-		if (frameDelay > frametime)
-		{
-			SDL_Delay(frameDelay - frametime);
-		}
+        game->player->userInput();
+        game->Render();
 	}
 
 	game->clean();

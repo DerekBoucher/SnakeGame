@@ -100,9 +100,6 @@ Engine::Engine(const char* x, int width, int height)
 	numRect.x = 0;
 	numRect.y = 0;
 
-	//Instantiate the Player
-	player = new Snake(mainRenderer, mainSurface, width, height);
-
 	//Instantiate the Fruit
 	fruit = new GameObject(mainRenderer, mainSurface, "/Users/Dab908/Desktop/Xcode Projects/snakeGame/Assets/fruit.png",w,h);
 
@@ -118,6 +115,13 @@ Engine::Engine(const char* x, int width, int height)
 
 	//Initialize time dependant seed
 	srand(time(NULL));
+    
+    //Instantiate the Player
+    player = new Snake(mainRenderer, mainSurface, width, height, &isRunning);
+    
+    //Initialize Engine Thread
+    _engineTHR = new std::thread(&Engine::Update, this);
+
 }
 
 void Engine::Render()
@@ -186,15 +190,28 @@ void Engine::clean()
 
 void Engine::Update()
 {
-	direction = player->userInput();
-	this->updateMap();
+    while (isRunning)
+    {
+        int frametime;
+        //FPS limit
+        const int FPS = 8;
+        const int frameDelay = 1000 / FPS;
+        Uint32 framestart;
+        framestart = SDL_GetTicks();
+        updateMap();
+        frametime = SDL_GetTicks() - framestart;
+        
+        if (frameDelay > frametime)
+        {
+            SDL_Delay(frameDelay - frametime);
+        }
+    }
 }
 
 void Engine::EventManager()
 {
-	SDL_Event mainEvent;
-	SDL_PollEvent(&mainEvent);
-	switch (mainEvent.type)
+    SDL_PollEvent(&shared::event);
+	switch (shared::event.type)
 	{
 	case SDL_QUIT:
 		isRunning = false;
@@ -229,18 +246,18 @@ void Engine::updateMap()
 			{
 				if (map[row][col] == cnt)
 				{
-					if (direction == 0)
+					if (player->direction == 0)
 					{
 						//Do nothing
 					}
-					else if(direction == 1)
+					else if(player->direction == 1)
 					{
 						//Move Up
 						if (row == 0)
 						{
 							//Hit upper wall
 							//Game Over
-							direction = 0;
+							player->direction = 0;
 							isRunning = false;
 						}
 						else if (map[row-1][col] == 0)
@@ -310,14 +327,14 @@ void Engine::updateMap()
 							//Hit body part
 						}
 					}
-					else if (direction == 2)
+					else if (player->direction == 2)
 					{
 						//Move left
 						if (col == 0)
 						{
 							//Hit left wall
 							//Game Over
-							direction = 0;
+							player->direction = 0;
 							isRunning = false;
 						}
 						else if (map[row][col-1] == 0)
@@ -386,7 +403,7 @@ void Engine::updateMap()
 							//Hit body part
 						}
 					}
-					else if (direction == 3)
+					else if (player->direction == 3)
 					{
 						//Move down
 
@@ -456,14 +473,14 @@ void Engine::updateMap()
 
 						}
 					}
-					else if (direction == 4)
+					else if (player->direction == 4)
 					{
 						//Move right
 						if (col == 18)
 						{
 							//Hit left wall
 							//Game Over
-							direction = 0;
+							player->direction = 0;
 							isRunning = false;
 						}
 						else if (map[row][col + 1] == 0)
