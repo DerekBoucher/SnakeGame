@@ -1,3 +1,5 @@
+#ifndef _ENGINE_H_
+#define _ENGINE_H_
 #pragma once
 #include <SDL2/SDL.h>
 #include <SDL2_image/SDL_image.h>
@@ -8,6 +10,9 @@
 #include <ctime>
 #include <thread>
 #include "Shared.h"
+#define HEAD_ROW player->snakeHeadRow
+#define HEAD_COL player->snakeHeadCol
+#define SNAKE_HEAD 1
 
 using namespace std;
 
@@ -27,7 +32,6 @@ public:
 
 	//Game Engine main Rendering function
 	void Render();
-	void setNumRect();
 
 	//Clean the subsystems if Application closes
 	void clean();
@@ -40,7 +44,7 @@ public:
 
 	//tilemap update function
 	void updateMap();
-	void loadMap(int[18][19]);
+	void loadMap(int[ARENA_SIZE_ROW][ARENA_SIZE_COL]);
 
 	//Return functions for other classes
 	SDL_Renderer* getRenderer();
@@ -56,19 +60,10 @@ private:
 	bool backgroundRenderOK;
 
 	//Map
-	int map[18][19];
+	int map[ARENA_SIZE_ROW][ARENA_SIZE_COL];
 
 	//Snake part count
 	int snakeParts;
-
-	//integer value representing the direction of the snake
-	int direction;
-
-	//Integer values to hold past positions of the snake parts
-	int pastX1 = 0;
-	int pastX2 = 0;
-	int pastY1 = 0;
-	int pastY2 = 0;
 
 	//Integer value containing the score
 	int Score = 0;
@@ -91,3 +86,4 @@ private:
 
 };
 
+#endif /* _ENGINE_H_ */

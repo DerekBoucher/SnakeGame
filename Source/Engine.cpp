@@ -1,5 +1,5 @@
 #include "Engine.h"
-int mapInput[18][19] = {
+int mapInput[ARENA_SIZE_ROW][ARENA_SIZE_COL] = {
 { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },//1
 { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },//2
 { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },//3
@@ -16,8 +16,6 @@ int mapInput[18][19] = {
 { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },//14
 { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },//15
 { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },//16
-{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },//17
-{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },//18
 };
 
 Engine::Engine(const char* x, int width, int height)
@@ -72,8 +70,8 @@ Engine::Engine(const char* x, int width, int height)
 	mainSurface = IMG_Load("/Users/Dab908/Desktop/Xcode Projects/snakeGame/Assets/background.png");
 	backgroundTexture = SDL_CreateTextureFromSurface(mainRenderer, mainSurface);
 	SDL_FreeSurface(mainSurface);
-	backgroundRect.h = 40;
-	backgroundRect.w = 40;
+	backgroundRect.h = TILE_SIZE;
+	backgroundRect.w = TILE_SIZE;
 
 	//Load Border
 	mainSurface = IMG_Load("/Users/Dab908/Desktop/Xcode Projects/snakeGame/Assets/gameBorder.png");
@@ -95,8 +93,8 @@ Engine::Engine(const char* x, int width, int height)
 
 
 	//Initialize num RECT
-	numRect.h = 40;
-	numRect.w = 40;
+	numRect.h = TILE_SIZE;
+	numRect.w = TILE_SIZE;
 	numRect.x = 0;
 	numRect.y = 0;
 
@@ -106,9 +104,6 @@ Engine::Engine(const char* x, int width, int height)
 	//Initialize the map
 
 	this->loadMap(mapInput);
-
-	//Initialize stop direction
-	direction = 0;
 
 	//Initialize snake size
 	snakeParts = 3;
@@ -121,59 +116,53 @@ Engine::Engine(const char* x, int width, int height)
     
     //Initialize Engine Thread
     _engineTHR = new std::thread(&Engine::Update, this);
-
 }
 
 void Engine::Render()
 {
-	SDL_RenderClear(mainRenderer);
-	for (int row = 0;row < 18;row++)
+    SDL_RenderClear(mainRenderer);
+	for (int row = 0;row < ARENA_SIZE_ROW;row++)
 	{
-		for (int col = 0;col < 19;col++)
+		for (int col = 0;col < ARENA_SIZE_COL;col++)
 		{
-			backgroundRect.x = col * 40;
-			backgroundRect.y = row * 40;
+			backgroundRect.x = col * TILE_SIZE;
+			backgroundRect.y = row * TILE_SIZE;
 			SDL_RenderCopy(mainRenderer, backgroundTexture, NULL, &backgroundRect);
 
 		}
 	}
-	backgroundRect.x = 19 * 40;
-	for (int row = 0;row < 18;row++)
+	backgroundRect.x = ARENA_SIZE_COL * TILE_SIZE;
+	for (int row = 0;row < ARENA_SIZE_ROW;row++)
 	{
-		backgroundRect.y = row * 40;
+		backgroundRect.y = row * TILE_SIZE;
 		SDL_RenderCopy(mainRenderer, border, NULL, &backgroundRect);
 	}
-	backgroundRect.x = 20 * 40;
-	backgroundRect.y = 2 * 40;
-	backgroundRect.w = 40 * 6;
+	backgroundRect.x = 20 * TILE_SIZE;
+	backgroundRect.y = 2 * TILE_SIZE;
+	backgroundRect.w = TILE_SIZE * 6;
 	SDL_RenderCopy(mainRenderer, SCORE, NULL, &backgroundRect);
 	if (Score < 10)
 	{
-		numRect.x = 40 * Score;
-		backgroundRect.x = 23 * 40;
-		backgroundRect.y = 4 * 40;
-		backgroundRect.w = 40;
+		numRect.x = TILE_SIZE * Score;
+		backgroundRect.x = 23 * TILE_SIZE;
+		backgroundRect.y = 4 * TILE_SIZE;
+		backgroundRect.w = TILE_SIZE;
 		SDL_RenderCopy(mainRenderer, num1, &numRect, &backgroundRect);
 	}
 	else if (Score < 100)
 	{
-		numRect.x = 40 * (Score % 10);
-		backgroundRect.x = 23 * 40;
-		backgroundRect.y = 4 * 40;
-		backgroundRect.w = 40;
+		numRect.x = TILE_SIZE * (Score % 10);
+		backgroundRect.x = 23 * TILE_SIZE;
+		backgroundRect.y = 4 * TILE_SIZE;
+		backgroundRect.w = TILE_SIZE;
 		SDL_RenderCopy(mainRenderer, num1, &numRect, &backgroundRect);
-		numRect.x = 40 * (Score / 10);
-		backgroundRect.x = 22 * 40;
+		numRect.x = TILE_SIZE * (Score / 10);
+		backgroundRect.x = 22 * TILE_SIZE;
 		SDL_RenderCopy(mainRenderer, num1, &numRect, &backgroundRect);
 	}
 	player->snakeRender(mainRenderer,map);
 	fruit->objectRender(mainRenderer,map);
 	SDL_RenderPresent(mainRenderer);
-}
-
-void Engine::setNumRect()
-{
-
 }
 
 bool Engine::Running()
@@ -185,6 +174,13 @@ void Engine::clean()
 {
 	SDL_DestroyWindow(mainWindow);
 	SDL_DestroyRenderer(mainRenderer);
+    SDL_DestroyTexture(num1);
+    SDL_DestroyTexture(num2);
+    SDL_DestroyTexture(num3);
+    SDL_DestroyTexture(border);
+    SDL_DestroyTexture(SCORE);
+    SDL_DestroyTexture(backgroundTexture);
+    delete fruit;
 	SDL_Quit();
 }
 
@@ -193,12 +189,12 @@ void Engine::Update()
     while (isRunning)
     {
         int frametime;
-        //FPS limit
         const int FPS = 8;
         const int frameDelay = 1000 / FPS;
         Uint32 framestart;
         framestart = SDL_GetTicks();
         updateMap();
+        Render();
         frametime = SDL_GetTicks() - framestart;
         
         if (frameDelay > frametime)
@@ -238,331 +234,354 @@ SDL_Window* Engine::getWindow()
 
 void Engine::updateMap()
 {
-	for (int cnt = 1;cnt <= snakeParts;cnt++)
-	{
-		for (int row = 0;row < 18;row++)
-		{
-			for (int col = 0;col < 19;col++)
-			{
-				if (map[row][col] == cnt)
-				{
-					if (player->direction == 0)
-					{
-						//Do nothing
-					}
-					else if(player->direction == 1)
-					{
-						//Move Up
-						if (row == 0)
-						{
-							//Hit upper wall
-							//Game Over
-							player->direction = 0;
-							isRunning = false;
-						}
-						else if (map[row-1][col] == 0)
-						{
-							//Empty tile
-							if (cnt == 1)
-							{
-								pastX1 = row;
-								pastY1 = col;
-								map[row - 1][col] = cnt;
-								map[row][col] = 0;
-							}
-							else if(cnt>1)
-							{
-								pastX2 = row;
-								pastY2 = col;
+    int pastRow = 0;
+    int pastCol = 0;
+    switch(player->direction)
+    {
+        case MOVE_UP:
+        {
+            //Eat Fruit
+            if(map[HEAD_ROW-1][HEAD_COL] == -1)
+            {
+                //Increment Score
+                ++Score;
+                
+                //Increment SnakeParts
+                ++snakeParts;
+                
+                //Move head
+                map[HEAD_ROW-1][HEAD_COL] = SNAKE_HEAD;
+                map[HEAD_ROW][HEAD_COL] = 0;
+                pastRow = HEAD_ROW;
+                pastCol = HEAD_COL;
+                HEAD_ROW = HEAD_ROW-1;
+                HEAD_COL = HEAD_COL;
+                
+                //Generate new random fruit
+                int row = rand()%ARENA_SIZE_ROW;
+                int col = rand()%ARENA_SIZE_COL;
+                while(map[row][col] != 0)
+                {
+                    row = rand()%ARENA_SIZE_ROW;
+                    col = rand()%ARENA_SIZE_COL;
+                }
+                map[row][col] = -1;
+                
+                for(int i = 2; i <= snakeParts; ++i)
+                    for(int j = 0; j < ARENA_SIZE_ROW; ++j)
+                        for(int k = 0; k < ARENA_SIZE_COL; ++k)
+                        {
+                            if(map[j][k] == i)
+                            {
+                                map[pastRow][pastCol] = i;
+                                map[j][k] = 0;
+                                pastRow = j;
+                                pastCol = k;
+                                j = ARENA_SIZE_ROW;
+                                k = ARENA_SIZE_COL;
+                            }
+                            if(i == snakeParts)
+                            {
+                                map[pastRow][pastCol] = i;
+                            }
+                        }
+                
+            }
+            //Collide with other snake part OR top wall
+            else if(map[HEAD_ROW-1][HEAD_COL] > 0
+                    || HEAD_ROW - 1 < 0)
+            {
+                //Game Over
+                isRunning = false;
+                player->direction = 0;
+            }
+            else
+            {
+                //Move head
+                map[HEAD_ROW-1][HEAD_COL] = SNAKE_HEAD;
+                map[HEAD_ROW][HEAD_COL] = 0;
+                pastRow = HEAD_ROW;
+                pastCol = HEAD_COL;
+                HEAD_ROW = HEAD_ROW-1;
+                HEAD_COL = HEAD_COL;
+                
+                for(int i = 2; i <= snakeParts; ++i)
+                    for(int j = 0; j < ARENA_SIZE_ROW; ++j)
+                        for(int k = 0; k < ARENA_SIZE_COL; ++k)
+                        {
+                            if(map[j][k] == i)
+                            {
+                                map[pastRow][pastCol] = i;
+                                map[j][k] = 0;
+                                pastRow = j;
+                                pastCol = k;
+                                j = ARENA_SIZE_ROW;
+                                k = ARENA_SIZE_COL;
+                            }
+                        }
+            }
+            break;
+        }
+        case MOVE_RIGHT:
+        {
+            //Eat Fruit
+            if(map[HEAD_ROW][HEAD_COL+1] == -1)
+            {
+                //Increment Score
+                ++Score;
+                
+                //Increment SnakeParts
+                ++snakeParts;
+                
+                //Move head
+                map[HEAD_ROW][HEAD_COL+1] = SNAKE_HEAD;
+                map[HEAD_ROW][HEAD_COL] = 0;
+                pastRow = HEAD_ROW;
+                pastCol = HEAD_COL;
+                HEAD_ROW = HEAD_ROW;
+                HEAD_COL = HEAD_COL+1;
+                
+                //Generate new random fruit
+                int row = rand()%ARENA_SIZE_ROW;
+                int col = rand()%ARENA_SIZE_COL;
+                while(map[row][col] != 0)
+                {
+                    row = rand()%ARENA_SIZE_ROW;
+                    col = rand()%ARENA_SIZE_COL;
+                }
+                map[row][col] = -1;
+                
+                for(int i = 2; i <= snakeParts; ++i)
+                    for(int j = 0; j < ARENA_SIZE_ROW; ++j)
+                        for(int k = 0; k < ARENA_SIZE_COL; ++k)
+                        {
+                            if(map[j][k] == i)
+                            {
+                                map[pastRow][pastCol] = i;
+                                map[j][k] = 0;
+                                pastRow = j;
+                                pastCol = k;
+                                j = ARENA_SIZE_ROW;
+                                k = ARENA_SIZE_COL;
+                            }
+                            if(i == snakeParts)
+                            {
+                                map[pastRow][pastCol] = i;
+                            }
+                        }
+                
+            }
+            //Collide with other snake part OR Right wall
+            else if(map[HEAD_ROW][HEAD_COL+1] > 0
+                    || HEAD_COL + 1 > ARENA_SIZE_COL-1)
+            {
+                //Game Over
+                isRunning = false;
+                player->direction = 0;
+            }
+            else
+            {
+                //Move head
+                map[HEAD_ROW][HEAD_COL+1] = SNAKE_HEAD;
+                map[HEAD_ROW][HEAD_COL] = 0;
+                pastRow = HEAD_ROW;
+                pastCol = HEAD_COL;
+                HEAD_ROW = HEAD_ROW;
+                HEAD_COL = HEAD_COL+1;
+                
+                for(int i = 2; i <= snakeParts; ++i)
+                    for(int j = 0; j < ARENA_SIZE_ROW; ++j)
+                        for(int k = 0; k < ARENA_SIZE_COL; ++k)
+                {
+                    if(map[j][k] == i)
+                    {
+                        map[pastRow][pastCol] = i;
+                        map[j][k] = 0;
+                        pastRow = j;
+                        pastCol = k;
+                        j = ARENA_SIZE_ROW;
+                        k = ARENA_SIZE_COL;
+                    }
+                }
+            }
+            break;
+        }
+        case MOVE_DOWN:
+        {
+            //Eat Fruit
+            if(map[HEAD_ROW+1][HEAD_COL] == -1)
+            {
+                //Increment Score
+                ++Score;
+                
+                //Increment SnakeParts
+                ++snakeParts;
+                
+                //Move head
+                map[HEAD_ROW+1][HEAD_COL] = SNAKE_HEAD;
+                map[HEAD_ROW][HEAD_COL] = 0;
+                pastRow = HEAD_ROW;
+                pastCol = HEAD_COL;
+                HEAD_ROW = HEAD_ROW+1;
+                HEAD_COL = HEAD_COL;
+                
+                //Generate new random fruit
+                int row = rand()%ARENA_SIZE_ROW;
+                int col = rand()%ARENA_SIZE_COL;
+                while(map[row][col] != 0)
+                {
+                    row = rand()%ARENA_SIZE_ROW;
+                    col = rand()%ARENA_SIZE_COL;
+                }
+                map[row][col] = -1;
+                
+                for(int i = 2; i <= snakeParts; ++i)
+                    for(int j = 0; j < ARENA_SIZE_ROW; ++j)
+                        for(int k = 0; k < ARENA_SIZE_COL; ++k)
+                        {
+                            if(map[j][k] == i)
+                            {
+                                map[pastRow][pastCol] = i;
+                                map[j][k] = 0;
+                                pastRow = j;
+                                pastCol = k;
+                                j = ARENA_SIZE_ROW;
+                                k = ARENA_SIZE_COL;
+                            }
+                            if(i == snakeParts)
+                            {
+                                map[pastRow][pastCol] = i;
+                            }
+                        }
+                
+            }
+            //Collide with other snake part OR Right wall
+            else if(map[HEAD_ROW+1][HEAD_COL] > 0
+                    || HEAD_ROW + 1 > ARENA_SIZE_ROW-1)
+            {
+                //Game Over
+                isRunning = false;
+                player->direction = 0;
+            }
+            else
+            {
+                //Move head
+                map[HEAD_ROW+1][HEAD_COL] = SNAKE_HEAD;
+                map[HEAD_ROW][HEAD_COL] = 0;
+                pastRow = HEAD_ROW;
+                pastCol = HEAD_COL;
+                HEAD_ROW = HEAD_ROW+1;
+                HEAD_COL = HEAD_COL;
 
-								map[row][col] = 0;
-								map[pastX1][pastY1] = cnt;
-								
-								pastX1 = pastX2;
-								pastY1 = pastY2;
-							}
-						}
-						else if (map[row-1][col] == -1)
-						{
-							//eat a fruit
-							if (cnt == 1)
-							{
-								pastX1 = row;
-								pastY1 = col;
-								map[row - 1][col] = cnt;
-								map[row][col] = -1;
-								//Generate random position for new fruit
-								pastX2 = rand() % 18;
-								pastY2 = rand() % 19;
-								while (map[pastX2][pastY2] != 0)
-								{
-									srand(time(NULL));
-									pastX2 = rand() % 18;
-									pastY2 = rand() % 19;
-								}
-								map[pastX2][pastY2] = -1;
-								Score++;
-							}
-							else if (cnt > 1)
-							{
-								if (cnt == snakeParts)
-								{
-									map[pastX1][pastY1] = cnt;
-									map[row][col] = ++snakeParts;
-									pastX1 = row;
-									pastY1 = col;
-								}
-								else
-								{
-									map[row][col] = -1;
-									map[pastX1][pastY1] = cnt;
-									pastX1 = row;
-									pastY1 = col;
-								}
-							}
-
-						}
-						else if (map[row-1][col] > 1)
-						{
-							//Hit body part
-						}
-					}
-					else if (player->direction == 2)
-					{
-						//Move left
-						if (col == 0)
-						{
-							//Hit left wall
-							//Game Over
-							player->direction = 0;
-							isRunning = false;
-						}
-						else if (map[row][col-1] == 0)
-						{
-							//Empty tile
-							if (cnt == 1)
-							{
-								pastX1 = row;
-								pastY1 = col;
-								map[row][col-1] = cnt;
-								map[row][col] = 0;
-							}
-							else
-							{
-								pastX2 = row;
-								pastY2 = col;
-
-								map[row][col] = 0;
-								map[pastX1][pastY1] = cnt;
-
-								pastX1 = pastX2;
-								pastY1 = pastY2;
-							}
-						}
-						else if (map[row][col - 1] == -1)
-						{
-							//eat a fruit
-							if (cnt == 1)
-							{
-								pastX1 = row;
-								pastY1 = col;
-								map[row][col-1] = cnt;
-								map[row][col] = -1;
-								//Generate random position for new fruit
-								pastX2 = rand() % 18;
-								pastY2 = rand() % 19;
-								while (map[pastX2][pastY2] != 0)
-								{
-									srand(time(NULL));
-									pastX2 = rand() % 18;
-									pastY2 = rand() % 19;
-								}
-								map[pastX2][pastY2] = -1;
-								Score++;
-							}
-							else if (cnt > 1)
-							{
-								if (cnt == snakeParts)
-								{
-									map[pastX1][pastY1] = cnt;
-									map[row][col] = ++snakeParts;
-									pastX1 = row;
-									pastY1 = col;
-								}
-								else
-								{
-									map[row][col] = -1;
-									map[pastX1][pastY1] = cnt;
-									pastX1 = row;
-									pastY1 = col;
-								}
-							}
-						}
-						else if (map[row][col - 1] > 1)
-						{
-							//Hit body part
-						}
-					}
-					else if (player->direction == 3)
-					{
-						//Move down
-
-						if (row == 17)
-						{
-							direction = 0;
-							isRunning = false;
-						}
-
-						if (row != 17 && map[row + 1][col] == 0)
-						{
-							if (cnt == 1)
-							{
-								
-								pastX1 = row;
-								pastY1 = col;
-								map[row + 1][col] = cnt;
-								map[row][col] = 0;
-							}
-							else
-							{
-								map[pastX1][pastY1] = cnt;
-								pastX1 = row;
-								pastY1 = col;
-								map[row][col] = 0;
-
-							}
-						}
-						else if (map[row + 1][col] == -1)
-						{
-							//eat a fruit
-							if (cnt == 1)
-							{
-								pastX1 = row;
-								pastY1 = col;
-								map[row + 1][col] = cnt;
-								map[row][col] = -1;
-								//Generate random position for new fruit
-								pastX2 = rand() % 18;
-								pastY2 = rand() % 19;
-								while (map[pastX2][pastY2] != 0)
-								{
-									srand(time(NULL));
-									pastX2 = rand() % 18;
-									pastY2 = rand() % 19;
-								}
-								map[pastX2][pastY2] = -1;
-								Score++;
-							}
-							else if (cnt > 1)
-							{
-								if (cnt == snakeParts)
-								{
-									map[pastX1][pastY1] = cnt;
-									map[row][col] = ++snakeParts;
-									pastX1 = row;
-									pastY1 = col;
-								}
-								else
-								{
-									map[row][col] = -1;
-									map[pastX1][pastY1] = cnt;
-									pastX1 = row;
-									pastY1 = col;
-								}
-							}
-
-						}
-					}
-					else if (player->direction == 4)
-					{
-						//Move right
-						if (col == 18)
-						{
-							//Hit left wall
-							//Game Over
-							player->direction = 0;
-							isRunning = false;
-						}
-						else if (map[row][col + 1] == 0)
-						{
-							//Empty tile
-							if (cnt == 1)
-							{
-								pastX1 = row;
-								pastY1 = col;
-								map[row][col] = 0;
-								map[row][col + 1] = cnt;
-							}
-							else
-							{
-								pastX2 = row;
-								pastY2 = col;
-
-								map[row][col] = 0;
-								map[pastX1][pastY1] = cnt;
-
-								pastX1 = pastX2;
-								pastY1 = pastY2;
-							}
-						}
-						else if (map[row][col + 1] == -1)
-						{
-							//eat a fruit
-							if (cnt == 1)
-							{
-								pastX1 = row;
-								pastY1 = col;
-								map[row][col+1] = cnt;
-								map[row][col] = -1;
-								//Generate random position for new fruit
-								pastX2 = rand() % 18;
-								pastY2 = rand() % 19;
-								while (map[pastX2][pastY2] != 0)
-								{
-									srand(time(NULL));
-									pastX2 = rand() % 18;
-									pastY2 = rand() % 19;
-								}
-								map[pastX2][pastY2] = -1;
-								Score++;
-							}
-							else if (cnt > 1)
-							{
-								if (cnt == snakeParts)
-								{
-									map[pastX1][pastY1] = cnt;
-									map[row][col] = ++snakeParts;
-									pastX1 = row;
-									pastY1 = col;
-
-								}
-								else
-								{
-									map[row][col] = -1;
-									map[pastX1][pastY1] = cnt;
-									pastX1 = row;
-									pastY1 = col;
-								}
-							}
-						}
-						else if (map[row][col + 1] > 1)
-						{
-							//Hit body part
-						}
-					}
-					row = 19;
-					col = 19;
-				}
-			}
-		}
-	}
+                for(int i = 2; i <= snakeParts; ++i)
+                    for(int j = 0; j < ARENA_SIZE_ROW; ++j)
+                        for(int k = 0; k < ARENA_SIZE_COL; ++k)
+                        {
+                            if(map[j][k] == i)
+                            {
+                                map[pastRow][pastCol] = i;
+                                map[j][k] = 0;
+                                pastRow = j;
+                                pastCol = k;
+                                j = ARENA_SIZE_ROW;
+                                k = ARENA_SIZE_COL;
+                            }
+                        }
+            }
+            break;
+        }
+        case MOVE_LEFT:
+        {
+            //Eat Fruit
+            if(map[HEAD_ROW][HEAD_COL-1] == -1)
+            {
+                //Increment Score
+                ++Score;
+                
+                //Increment SnakeParts
+                ++snakeParts;
+                
+                //Move head
+                map[HEAD_ROW][HEAD_COL-1] = SNAKE_HEAD;
+                map[HEAD_ROW][HEAD_COL] = 0;
+                pastRow = HEAD_ROW;
+                pastCol = HEAD_COL;
+                HEAD_ROW = HEAD_ROW;
+                HEAD_COL = HEAD_COL-1;
+                
+                //Generate new random fruit
+                int row = rand()%ARENA_SIZE_ROW;
+                int col = rand()%ARENA_SIZE_COL;
+                while(map[row][col] != 0)
+                {
+                    row = rand()%ARENA_SIZE_ROW;
+                    col = rand()%ARENA_SIZE_COL;
+                }
+                map[row][col] = -1;
+                
+                for(int i = 2; i <= snakeParts; ++i)
+                    for(int j = 0; j < ARENA_SIZE_ROW; ++j)
+                        for(int k = 0; k < ARENA_SIZE_COL; ++k)
+                        {
+                            if(map[j][k] == i)
+                            {
+                                map[pastRow][pastCol] = i;
+                                map[j][k] = 0;
+                                pastRow = j;
+                                pastCol = k;
+                                j = ARENA_SIZE_ROW;
+                                k = ARENA_SIZE_COL;
+                            }
+                            if(i == snakeParts)
+                            {
+                                map[pastRow][pastCol] = i;
+                            }
+                        }
+                
+            }
+            //Collide with other snake part OR Right wall
+            else if(map[HEAD_ROW][HEAD_COL-1] > 0
+                    || HEAD_COL - 1 < 0)
+            {
+                //Game Over
+                isRunning = false;
+                player->direction = 0;
+            }
+            else
+            {
+                //Move head
+                map[HEAD_ROW][HEAD_COL-1] = SNAKE_HEAD;
+                map[HEAD_ROW][HEAD_COL] = 0;
+                pastRow = HEAD_ROW;
+                pastCol = HEAD_COL;
+                HEAD_ROW = HEAD_ROW;
+                HEAD_COL = HEAD_COL-1;
+                
+                for(int i = 2; i <= snakeParts; ++i)
+                    for(int j = 0; j < ARENA_SIZE_ROW; ++j)
+                        for(int k = 0; k < ARENA_SIZE_COL; ++k)
+                        {
+                            if(map[j][k] == i)
+                            {
+                                map[pastRow][pastCol] = i;
+                                map[j][k] = 0;
+                                pastRow = j;
+                                pastCol = k;
+                                j = ARENA_SIZE_ROW;
+                                k = ARENA_SIZE_COL;
+                            }
+                        }
+            }
+            break;
+        }
+    }
 }
 
-void Engine::loadMap(int arr[18][19])
+void Engine::loadMap(int arr[ARENA_SIZE_ROW][ARENA_SIZE_COL])
 {
-	for (int row = 0;row < 18;row++)
+	for (int row = 0;row < ARENA_SIZE_ROW;row++)
 	{
-		for (int col = 0;col < 19;col++)
+		for (int col = 0;col < ARENA_SIZE_COL;col++)
 		{
 			map[row][col] = arr[row][col];
 		}

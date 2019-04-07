@@ -9,8 +9,8 @@ GameObject::GameObject(SDL_Renderer* passedRenderer, SDL_Surface* passedSurface,
 	SDL_FreeSurface(passedSurface);
 
 	//Set the Texture size to be rendered
-	objectLocation.h = 40;
-	objectLocation.w = 40;
+	objectLocation.h = TILE_SIZE;
+	objectLocation.w = TILE_SIZE;
 }
 
 SDL_Rect GameObject::generateRandomRect(std::vector<SDL_Rect> passedSnakeParts, int xCoord, int yCoord)
@@ -22,8 +22,8 @@ SDL_Rect GameObject::generateRandomRect(std::vector<SDL_Rect> passedSnakeParts, 
 	//Generate a random position on the screen
 	while (isOccupied)
 	{
-		int x = 40 * 10;
-		int y = 40 * 12;
+		int x = TILE_SIZE * 10;
+		int y = TILE_SIZE * 12;
 		objectLocation.x = x;
 		objectLocation.y = y;
 		//Verify if any of the snakeparts already occupy generated position
@@ -45,16 +45,16 @@ SDL_Rect GameObject::generateRandomRect(std::vector<SDL_Rect> passedSnakeParts, 
 	return objectLocation;
 }
 
-void GameObject::objectRender(SDL_Renderer* passedRenderer, int arr[18][19])
+void GameObject::objectRender(SDL_Renderer* passedRenderer, int arr[ARENA_SIZE_ROW][ARENA_SIZE_COL])
 {
-	for (int i = 0;i < 18;i++)
+	for (int i = 0;i < ARENA_SIZE_ROW;i++)
 	{
-		for (int j = 0;j < 19;j++)
+		for (int j = 0;j < ARENA_SIZE_COL;j++)
 		{
 			if (arr[i][j] == -1)
 			{
-				objectLocation.x = j * 40;
-				objectLocation.y = i * 40;
+				objectLocation.x = j * TILE_SIZE;
+				objectLocation.y = i * TILE_SIZE;
 				SDL_RenderCopy(passedRenderer, objectTexture, NULL, &objectLocation);
 			}
 		}
@@ -63,4 +63,5 @@ void GameObject::objectRender(SDL_Renderer* passedRenderer, int arr[18][19])
 
 GameObject::~GameObject()
 {
+    SDL_DestroyTexture(objectTexture);
 }

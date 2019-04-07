@@ -1,3 +1,5 @@
+#ifndef _GAMEOBJECT_H_
+#define _GAMEOBJECT_H_
 #pragma once
 #include <math.h>
 #include <vector>
@@ -12,7 +14,7 @@ public:
 	GameObject(SDL_Renderer*,SDL_Surface*,const char*,int,int);
 
 	//GameObject Rendering function
-	void objectRender(SDL_Renderer*,int[18][19]);
+	void objectRender(SDL_Renderer*,int[ARENA_SIZE_ROW][ARENA_SIZE_COL]);
 
 	//Generate random SDL_Rect
 	SDL_Rect generateRandomRect(vector<SDL_Rect>,int,int);
@@ -24,3 +26,4 @@ private:
 	SDL_Rect objectLocation;
 };
 
+#endif /* _GAMEOBJECT_H_ */

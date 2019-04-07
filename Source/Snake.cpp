@@ -6,8 +6,8 @@ SDL_Event shared::event;
 Snake::Snake(SDL_Renderer* passedRenderer, SDL_Surface* passedSurface, int xCoord, int yCoord, bool* running)
 {
 	//Format the dimensions of the destination rectangle
-	destRect.h = 40;
-	destRect.w = 40;
+	destRect.h = TILE_SIZE;
+	destRect.w = TILE_SIZE;
 
 	//Load texture for head
 	passedSurface = IMG_Load("/Users/Dab908/Desktop/Xcode Projects/snakeGame/Assets/SnakeHead.png");
@@ -24,26 +24,29 @@ Snake::Snake(SDL_Renderer* passedRenderer, SDL_Surface* passedSurface, int xCoor
     
     isRunning = running;
     
+    snakeHeadRow = 9;
+    snakeHeadCol = 15;
+    
 }
 
-bool Snake::snakeRender(SDL_Renderer* passedRenderer,int arr[18][19])
+bool Snake::snakeRender(SDL_Renderer* passedRenderer,int arr[ARENA_SIZE_ROW][ARENA_SIZE_COL])
 {
 	//Render every snake part to the screen
-	for (int row = 0;row < 18;row++)
+	for (int row = 0;row < ARENA_SIZE_ROW;row++)
 	{
-		for (int col = 0;col < 19;col++)
+		for (int col = 0;col < ARENA_SIZE_COL;col++)
 		{
 			if (arr[row][col] == 1)
 			{
 				//Render the snake head
-				destRect.x = col * 40;
-				destRect.y = row * 40;
+				destRect.x = col * TILE_SIZE;
+				destRect.y = row * TILE_SIZE;
 				SDL_RenderCopy(passedRenderer, headTexture, NULL, &destRect);
 			}
 			else if(arr[row][col] > 1)
 			{
-				destRect.x = col * 40;
-				destRect.y = row * 40;
+				destRect.x = col * TILE_SIZE;
+				destRect.y = row * TILE_SIZE;
 				SDL_RenderCopy(passedRenderer, bodyTexture, NULL, &destRect);
 			}
 		}
@@ -62,25 +65,25 @@ void Snake::userInput()
 		case SDLK_w:
 			if (direction != 3)
 			{
-				direction = 1;
+				direction = MOVE_UP;
 			}
 			break;
 		case SDLK_a:
 			if (direction != 4)
 			{
-				direction = 2;
+				direction = MOVE_LEFT;
 			}
 			break;
 		case SDLK_s:
 			if (direction != 1)
 			{
-				direction = 3;
+				direction = MOVE_DOWN;
 			}
 			break;
 		case SDLK_d:
 			if (direction != 2)
 			{
-				direction = 4;
+				direction = MOVE_RIGHT;
 			}
 			break;
 		case SDLK_CLEAR:
