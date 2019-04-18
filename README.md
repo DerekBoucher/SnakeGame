@@ -25,7 +25,7 @@ Premake5 Repository : https://github.com/premake/premake-core
     1.  The goal of the game is to collect as much fruits as possible
     2.  A fruit can be collected by passing over its tile.
     3.  Every time a fruit is collected, the length of the snake grows by 1.
-    4.  The game is over once one of these events occurs:
+    4.  The game is over if one of these events occurs:
         
         4_1.  The player collides with any border of the game area.
         4_2.  The player collides with one of his snake parts.
