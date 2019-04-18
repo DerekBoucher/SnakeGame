@@ -8,7 +8,8 @@
 
 #ifndef Shared_h
 #define Shared_h
-#include <SDL2/SDL.h>
+#include "SDL.h"
+
 #define MOVE_UP 1
 #define MOVE_DOWN 3
 #define MOVE_LEFT 2

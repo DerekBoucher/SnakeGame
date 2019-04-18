@@ -1,15 +1,17 @@
 #ifndef _ENGINE_H_
 #define _ENGINE_H_
 #pragma once
-#include <SDL2/SDL.h>
-#include <SDL2_image/SDL_image.h>
-#include <iostream>
-#include "Snake.h"
-#include "GameObject.h"
 #include <math.h>
 #include <ctime>
 #include <thread>
+#include <iostream>
+
+#include "SDL.h"
+#include "SDL_image.h"
+#include "Snake.h"
+#include "GameObject.h"
 #include "Shared.h"
+
 #define HEAD_ROW player->snakeHeadRow
 #define HEAD_COL player->snakeHeadCol
 #define SNAKE_HEAD 1

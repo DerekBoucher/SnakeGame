@@ -3,8 +3,9 @@
 #pragma once
 #include <math.h>
 #include <vector>
-#include <SDL2/SDL.h>
-#include <SDL2_image/SDL_image.h>
+
+#include "SDL.h"
+#include "SDL_image.h"
 #include "Shared.h"
 using namespace std;
 

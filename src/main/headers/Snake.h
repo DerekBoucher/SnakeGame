@@ -2,11 +2,12 @@
 #define _SNAKE_H_
 #pragma once
 #include <vector>
-#include <SDL2/SDL.h>
-#include <SDL2_image/SDL_image.h>
 #include <iostream>
 #include <thread>
+
 #include "Shared.h"
+#include "SDL.h"
+#include "SDL_image.h"
 
 class Snake
 {
