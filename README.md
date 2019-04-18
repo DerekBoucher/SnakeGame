@@ -1,5 +1,8 @@
 # SnakeGame
 Personal Snake Game project written in C/C++ using the SDL 2.0 library.
+This project makes use of Premake5 to support cross platform building
+
+Premake5 Repository : https://github.com/premake/premake-core
 
 #How to build:
 
