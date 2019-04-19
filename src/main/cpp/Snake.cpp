@@ -10,12 +10,12 @@ Snake::Snake(SDL_Renderer* passedRenderer, SDL_Surface* passedSurface, int xCoor
 	destRect.w = TILE_SIZE;
 
 	//Load texture for head
-	passedSurface = IMG_Load("/Users/Dab908/Desktop/Xcode Projects/snakeGame/Assets/SnakeHead.png");
+	passedSurface = IMG_Load("Assets/SnakeHead.png");
 	headTexture = SDL_CreateTextureFromSurface(passedRenderer, passedSurface);
 	SDL_FreeSurface(passedSurface);
 
 	//Load Texture for body
-	passedSurface = IMG_Load("/Users/Dab908/Desktop/Xcode Projects/snakeGame/Assets/snakeBody.png");
+	passedSurface = IMG_Load("Assets/snakeBody.png");
 	bodyTexture = SDL_CreateTextureFromSurface(passedRenderer, passedSurface);
 	SDL_FreeSurface(passedSurface);
 
