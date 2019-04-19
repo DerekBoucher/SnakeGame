@@ -9,6 +9,8 @@
 -- >premake5 vs2015
 -- Visual Studio 2017 (Windows):
 -- >premake5 vs2017
+-- Visual Studio 2019 (Windows):
+-- >premake5 vs2019
 
 -- Then simply open project in IDE and build.
 
@@ -26,19 +28,60 @@ workspace "snakeGame"
 		files { "**.h", "**.cpp" }
 
 		filter "system:macosx"
-			links
-			{
-				"SDL2.framework",
-				"SDL2_image.framework"
-			}
-			buildoptions 
-			{
-				"-F %{prj.location}/lib/MacOS"
-			}
-			linkoptions 
-			{
-				"-F %{prj.location}/lib/MacOS"
-			}
+			filter { 'configurations:Debug' }
+				postbuildcommands
+				{
+					"{COPY} Assets/ bin/%{cfg.buildcfg}/Assets"
+				}
+				links
+				{
+					"SDL2.framework",
+					"SDL2_image.framework"
+				}
+				buildoptions 
+				{
+					"-F %{prj.location}/lib/MacOS"
+				}
+				linkoptions 
+				{
+					"-F %{prj.location}/lib/MacOS"
+				}
+			filter{ 'configurations:Release' }
+				postbuildcommands
+				{
+					"{COPY} Assets/ bin/%{cfg.buildcfg}/Assets"
+				}
+				links
+				{
+					"SDL2.framework",
+					"SDL2_image.framework"
+				}
+				buildoptions 
+				{
+					"-F %{prj.location}/lib/MacOS"
+				}
+				linkoptions 
+				{
+					"-F %{prj.location}/lib/MacOS"
+				}
+			filter{ 'configurations:Dist' }
+				postbuildcommands
+				{
+					"{COPY} Assets/ bin/%{cfg.buildcfg}/Assets"
+				}
+				links
+				{
+					"SDL2.framework",
+					"SDL2_image.framework"
+				}
+				buildoptions 
+				{
+					"-F %{prj.location}/lib/MacOS"
+				}
+				linkoptions 
+				{
+					"-F %{prj.location}/lib/MacOS"
+				}
 
 		filter "system:windows"
 			defines { "SDL_MAIN_HANDLED" }
