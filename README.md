@@ -17,7 +17,7 @@ Premake5 Repository : https://github.com/premake/premake-core
         
     WINDOWS:
     **Only supports building with VS 2013, 2015, 2017 and 2019.
-        3_4. From the Command Line, enter "premake5 vs20xx". (where xx = 13, 15, or 19)
+        3_4. From the Command Line, enter "premake5 vs20xx". (where xx = 13, 15, 17 or 19)
         3_5. Open the generated .sln file.
         3_6. Build the project in Visual Studio.
 
