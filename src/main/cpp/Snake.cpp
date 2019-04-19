@@ -63,25 +63,25 @@ void Snake::userInput()
 		switch (shared::event.key.keysym.sym)
 		{
 		case SDLK_w:
-			if (direction != 3)
+			if (direction != MOVE_DOWN)
 			{
 				direction = MOVE_UP;
 			}
 			break;
 		case SDLK_a:
-			if (direction != 4)
+			if (direction != MOVE_RIGHT)
 			{
 				direction = MOVE_LEFT;
 			}
 			break;
 		case SDLK_s:
-			if (direction != 1)
+			if (direction != MOVE_UP)
 			{
 				direction = MOVE_DOWN;
 			}
 			break;
 		case SDLK_d:
-			if (direction != 2)
+			if (direction != MOVE_LEFT)
 			{
 				direction = MOVE_RIGHT;
 			}
