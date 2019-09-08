@@ -25,10 +25,9 @@ workspace "snakeGame"
 		objdir 	"obj/"
 		cppdialect "C++17"
 
-		files { "**.h", "**.cpp" }
+		files { "src/**.h", "src/**.cpp" }
 
-		filter "system:macosx"
-			filter { 'configurations:Debug' }
+			filter { 'configurations:Debug', "system:macosx" }
 				postbuildcommands
 				{
 					"{COPY} Assets/ bin/%{cfg.buildcfg}/Assets"
@@ -46,7 +45,7 @@ workspace "snakeGame"
 				{
 					"-F %{prj.location}/lib/MacOS"
 				}
-			filter{ 'configurations:Release' }
+			filter{ 'configurations:Release', "system:macosx" }
 				postbuildcommands
 				{
 					"{COPY} Assets/ bin/%{cfg.buildcfg}/Assets"
@@ -64,7 +63,7 @@ workspace "snakeGame"
 				{
 					"-F %{prj.location}/lib/MacOS"
 				}
-			filter{ 'configurations:Dist' }
+			filter{ 'configurations:Dist', "system:macosx" }
 				postbuildcommands
 				{
 					"{COPY} Assets/ bin/%{cfg.buildcfg}/Assets"
