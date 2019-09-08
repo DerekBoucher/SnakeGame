@@ -4,7 +4,7 @@ This project makes use of Premake5 to support cross platform building
 
 Premake5 Repository : https://github.com/premake/premake-core
 
-#How to build:
+## How to build:
 
     1.  Clone Repository into arbitrary directory.
     2.  Open the command line or Terminal from the directory of the cloned repository.
@@ -21,7 +21,7 @@ Premake5 Repository : https://github.com/premake/premake-core
         3_5. Open the generated .sln file.
         3_6. Build the project in Visual Studio.
 
-#Game Rules:
+## Game Rules:
 
     1.  The goal of the game is to collect as much fruits as possible
     2.  A fruit can be collected by passing over its tile.
@@ -31,7 +31,7 @@ Premake5 Repository : https://github.com/premake/premake-core
         4_1.  The player collides with any border of the game area.
         4_2.  The player collides with one of his snake parts.
 
-#Controls:
+### Controls:
 
     A -> Move left
     S -> Move down
