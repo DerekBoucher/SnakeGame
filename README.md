@@ -4,6 +4,8 @@ This project makes use of Premake5 to support cross platform building
 
 Premake5 Repository : https://github.com/premake/premake-core
 
+![](images/gameplay.png)
+
 ## How to build:
 
     1.  Clone Repository into arbitrary directory.
