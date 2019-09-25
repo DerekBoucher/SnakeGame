@@ -2,7 +2,7 @@
 -- Author: Derek Boucher
 -- In order to build, simply open command line in project folder and execute the following:
 -- Xcode (MAC OS):
--- >premake5 xcode4
+-- >./premake5 xcode4
 -- Visual Studio 2013 (Windows):
 -- >premake5 vs2013
 -- Visual Studio 2015 (Windows):
@@ -45,6 +45,11 @@ workspace "snakeGame"
 				{
 					"-F %{prj.location}/lib/MacOS"
 				}
+				includedirs
+				{
+					"lib/MacOS/SDL2.framework/Headers",
+					"lib/MacOS/SDL2_image.framework/Headers"
+				}
 			filter{ 'configurations:Release', "system:macosx" }
 				postbuildcommands
 				{
@@ -63,6 +68,11 @@ workspace "snakeGame"
 				{
 					"-F %{prj.location}/lib/MacOS"
 				}
+				includedirs
+				{
+					"lib/MacOS/SDL2.framework/Headers",
+					"lib/MacOS/SDL2_image.framework/Headers"
+				}
 			filter{ 'configurations:Dist', "system:macosx" }
 				postbuildcommands
 				{
@@ -80,6 +90,11 @@ workspace "snakeGame"
 				linkoptions 
 				{
 					"-F %{prj.location}/lib/MacOS"
+				}
+				includedirs
+				{
+					"lib/MacOS/SDL2.framework/Headers",
+					"lib/MacOS/SDL2_image.framework/Headers"
 				}
 
 		filter "system:windows"
